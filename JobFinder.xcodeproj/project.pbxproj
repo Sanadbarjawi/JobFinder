@@ -13,6 +13,7 @@
 		16E021D52216D83B00A8FA2D /* JobFinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E021D42216D83B00A8FA2D /* JobFinderTests.swift */; };
 		16E021E52216DEBF00A8FA2D /* MainView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16E021E42216DEBF00A8FA2D /* MainView.storyboard */; };
 		16E021E72216DEE800A8FA2D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E021E62216DEE800A8FA2D /* MainViewController.swift */; };
+		16E021EA2216E0F200A8FA2D /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E021E92216E0F200A8FA2D /* Configuration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		16E021D62216D83B00A8FA2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		16E021E42216DEBF00A8FA2D /* MainView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainView.storyboard; sourceTree = "<group>"; };
 		16E021E62216DEE800A8FA2D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		16E021E92216E0F200A8FA2D /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		16E021BE2216D83A00A8FA2D /* JobFinder */ = {
 			isa = PBXGroup;
 			children = (
+				16E021E82216E0E000A8FA2D /* Configuration */,
 				16E021C82216D83B00A8FA2D /* LaunchScreen.storyboard */,
 				16E021BF2216D83A00A8FA2D /* AppDelegate.swift */,
 				16E021CB2216D83B00A8FA2D /* Info.plist */,
@@ -126,6 +129,14 @@
 				16E021E62216DEE800A8FA2D /* MainViewController.swift */,
 			);
 			path = MainView;
+			sourceTree = "<group>";
+		};
+		16E021E82216E0E000A8FA2D /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				16E021E92216E0F200A8FA2D /* Configuration.swift */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,6 +240,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16E021EA2216E0F200A8FA2D /* Configuration.swift in Sources */,
 				16E021C02216D83A00A8FA2D /* AppDelegate.swift in Sources */,
 				16E021E72216DEE800A8FA2D /* MainViewController.swift in Sources */,
 			);
