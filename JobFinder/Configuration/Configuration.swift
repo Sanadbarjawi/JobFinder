@@ -20,29 +20,25 @@ private struct Configuration {
 
 // MARK: - Paths Handling
 protocol Endpoint {
-    var github: String { get }
-    var searGOV: String { get }
+    var path: String { get }
 }
 
 enum URLPath {
     // jobs
-    case jobs
+    case searchGOVJobs
+    case gitHubJobs
 }
 
 extension URLPath: Endpoint {
-    
-    var searGOV: String {
+   
+    var path: String {
         switch self {
-        case .jobs:
+        case .searchGOVJobs:
             return "\(Configuration.searchGOVServerURL)jobs/search.json?"
+        case .gitHubJobs:
+             return "\(Configuration.gitHubServerURL)positions.json?"
         }
     }
-    
-    var github: String {
-        switch self {
-        case .jobs:
-            return "\(Configuration.gitHubServerURL)positions.json?"
-        }
-    }
+ 
 
 }

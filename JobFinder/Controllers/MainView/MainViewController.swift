@@ -10,21 +10,34 @@ import UIKit
 
 class MainViewController: UIViewController {
 
+    var presenter: MainViewPresenter!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        presenter = MainViewPresenter(JobService())
+        presenter.attatchView(self)
+        presenter.getGitHubJobs(description: "String", location: "String")
     }
     
 
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+}
+extension MainViewController: MainViewDelegate {
+    func setFailed(error: Error?) {
+        
     }
-    */
-
+    
+    func setSucceeded() {
+        
+    }
+    
+    func startLoading() {
+        
+    }
+    
+    func finishLoading() {
+        
+    }
+    
+    
 }
