@@ -9,35 +9,35 @@
 import Foundation
 
 enum FilterEnum: String {
-    case position
-    case location
-    case provider
+    case Position
+    case Location
+    case Provider
+    case All
 }
 
 protocol MainViewDelegate: class {
-    func setGitHubServiceSucceeded()
-    func startGitHubServiceLoading()
-    func finishGitHubServiceLoading()
-    func setGitHubServiceFailed(error: Error?)
-    
-    func setGOVSearchServiceSucceeded()
-    func startGOVSearchServiceLoading()
-    func finishGOVSearchServiceLoading()
-    func setGOVSearchServiceFailed(error: Error?)
-    
+    func setSucceeded()
+    func startLoading()
+    func finishLoading()
+    func setFailed(error: Error?)
+
+    func setSearchBarPlaceholderForPositionFilter()
+    func setSearchBarPlaceholderForLocationFilter()
+    func setSearchBarPlaceholderForProviderFilter()
+    func setSearchBarPlaceholderForAllFilter()
 }
 
 class MainViewPresenter {
+    private var jobsArray = [JobsModel]()
     
-    private var gitHubJobs = [JobsModel]()
-    private var dropDownData = [FilterEnum.location, FilterEnum.provider, FilterEnum.position]
-    private var selectedFilter = FilterEnum.position
+    private var dropDownData = [FilterEnum.All, FilterEnum.Location, FilterEnum.Provider, FilterEnum.Position]
+    private var selectedFilter = FilterEnum.All
     weak var view: MainViewDelegate?
     var service: JobService?
-   
+    private var location = ""
+    
     init(_ service: JobService) {
-
-
+        
         self.service = service
     }
     
@@ -48,58 +48,97 @@ class MainViewPresenter {
     func detachView() {
         self.view = nil
     }
-    
+
     func getGitHubJobsAPI(location: String? = nil, description: String? = nil) {
-        
+        jobsArray.removeAll()
         let params = ["":""]
         let queryLocationItem = URLQueryItem(name: "location", value: location)
         let queryPositionItem = URLQueryItem(name: "description", value: description)
-
-        view?.startGitHubServiceLoading()
-        service?.getGitHubJobs(params: params, queryItems: [queryLocationItem, queryPositionItem], success: {[weak self] model in
-            model.forEach{self?.gitHubJobs.append($0)}
-            self?.view?.setGitHubServiceSucceeded()
-            self?.view?.finishGitHubServiceLoading()
-            }, failure: {[weak self] error in
-                self?.view?.setGitHubServiceFailed(error: error)
-                self?.view?.finishGitHubServiceLoading()
-            }
-        )}
-    
-    func getGOVSearchJobsAPI(searchQuery: String? = nil) {
         
-        let params = ["":""]
-        let queryItem = URLQueryItem(name: "query", value: searchQuery)
-        view?.startGOVSearchServiceLoading()
-        service?.getGOVSearchJobs(params: params, queryItems: [queryItem], success: { [weak self] model in
-            model.forEach{self?.gitHubJobs.append($0)}
-            self?.view?.setGitHubServiceSucceeded()
-            self?.view?.finishGOVSearchServiceLoading()
+        view?.startLoading()
+        service?.getGitHubJobs(params: params, queryItems: [queryLocationItem, queryPositionItem], success: {[weak self] model in
+            model.forEach{self?.jobsArray.append($0)}
+            self?.view?.setSucceeded()
+            self?.view?.finishLoading()
             }, failure: {[weak self] error in
-                self?.view?.setGOVSearchServiceFailed(error: error)
-                self?.view?.finishGOVSearchServiceLoading()
+                self?.view?.setFailed(error: error)
+                self?.view?.finishLoading()
             }
         )}
     
-    func resetSearch() {
-        gitHubJobs.removeAll()
-    }
+    func getGOVSearchJobsAPI(Desc: String? = nil, location: String? = nil) {
+        jobsArray.removeAll()
+        let params = ["":""]
+        let queryLocationItem = URLQueryItem(name: "query", value: Desc)
+        let queryDescItem = URLQueryItem(name: "in", value: location)
+
+        view?.startLoading()
+        service?.getGOVSearchJobs(params: params, queryItems: [queryDescItem, queryLocationItem], success: { [weak self] model in
+            model.forEach{self?.jobsArray.append($0)}
+            self?.view?.setSucceeded()
+            self?.view?.finishLoading()
+            }, failure: {[weak self] error in
+                self?.view?.setFailed(error: error)
+                self?.view?.finishLoading()
+            }
+        )}
     
+    func filterOnProvider(_ provider: String) {
+       
+        let matchingTerms = jobsArray.filter({
+            $0.jobDetailsURL?.range(of: provider, options: .caseInsensitive) != nil
+        })
+        jobsArray = matchingTerms
+        self.view?.setSucceeded()
+    }
+
     func returnDropDownFilterDataSource() -> [FilterEnum.RawValue] {
         return dropDownData.map{$0.rawValue}
     }
-
+    
     func selectFilter(index: Int) {
-       selectedFilter = dropDownData[index]
+        selectedFilter = dropDownData[index]
+        switch selectedFilter {
+    
+        case .Position:
+            view?.setSearchBarPlaceholderForPositionFilter()
+        case .Location:
+            view?.setSearchBarPlaceholderForLocationFilter()
+        case .Provider:
+            view?.setSearchBarPlaceholderForProviderFilter()
+        case .All:
+            view?.setSearchBarPlaceholderForAllFilter()
+        }
+    }
+    
+    func setLocation(_ location: String) {
+        self.location = location
     }
     
     func returnSelectedFilter() -> FilterEnum  {
         return selectedFilter
     }
     
-    func returnGitHubJobsData() -> [JobsModel] {
-
-        return gitHubJobs
+    func configureSelectedFilter(searchText: String) {
+        switch selectedFilter {
+            
+        case .Position:
+            getGitHubJobsAPI(location: location, description: searchText)
+            getGOVSearchJobsAPI(Desc: searchText, location: location)
+        case .Location:
+           getGitHubJobsAPI(location: location, description: searchText)
+            getGOVSearchJobsAPI(Desc: searchText, location: location)
+        case .Provider:
+            filterOnProvider(searchText)
+        case .All:
+            getGitHubJobsAPI(location: location, description: searchText)
+            getGOVSearchJobsAPI(Desc: searchText, location: location)
+        }
+    }
+    
+    func returnJobsData() -> [JobsModel] {
+        
+        return jobsArray
     }
     
 }

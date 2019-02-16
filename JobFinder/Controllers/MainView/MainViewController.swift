@@ -8,6 +8,7 @@
 
 import UIKit
 import DropDown
+import GooglePlaces
 
 class MainViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
@@ -16,6 +17,9 @@ class MainViewController: UIViewController {
     
     var presenter: MainViewPresenter!
     var dropDown: DropDown!
+    
+ 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
      
@@ -26,15 +30,7 @@ class MainViewController: UIViewController {
         jobsTableView.tableFooterView = UIView()
         jobsTableView.tableHeaderView = searchBar
         
-        dropDown = DropDown()
-        dropDown.direction = .bottom
-        dropDown.dataSource = presenter.returnDropDownFilterDataSource()
-   
-        dropDown.selectionAction = {[weak self] (index, item) in
-            self?.presenter.selectFilter(index: index)
-        }
-        dropDown.anchorView = filterButton
-        dropDown.bottomOffset = CGPoint(x: 0, y: filterButton.accessibilityFrame.height)
+        dropDownConfig()
         
     }
     
@@ -42,97 +38,119 @@ class MainViewController: UIViewController {
         dropDown.show()
     }
     
+    fileprivate func dropDownConfig() {
+        dropDown = DropDown()
+        dropDown.direction = .bottom
+        dropDown.dataSource = presenter.returnDropDownFilterDataSource()
+        
+        dropDown.selectionAction = {[weak self] (index, item) in
+            FilterEnum(rawValue: item) == .Location ? self?.configureAndPresentAutoComplete() : self?.presenter.selectFilter(index: index)
+            self?.searchBar.text = ""
+            self?.presenter.getGitHubJobsAPI()
+            self?.presenter.getGOVSearchJobsAPI()
+        }
+        
+        dropDown.anchorView = filterButton
+        dropDown.bottomOffset = CGPoint(x: 0, y: filterButton.accessibilityFrame.height)
+    }
+    
+    func configureAndPresentAutoComplete() {
+        let acController = GMSAutocompleteViewController()
+        acController.delegate = self
+        present(acController, animated: true, completion: nil)
+    }
 }
 
 extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        
+        jobsTableView.reloadData()
         searchBar.endEditing(true)
     }
-    
+
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        presenter.resetSearch()
-      let selectedFilter = presenter.returnSelectedFilter()
-        
-        switch selectedFilter {
-       
-        case .position:
-            presenter.getGitHubJobsAPI(location: nil, description: searchBar.text)
-        case .location:
-            presenter.getGitHubJobsAPI(location: searchBar.text, description: searchBar.text)
-        case .provider:
-            break
-        }
-        
-        presenter.getGOVSearchJobsAPI(searchQuery: searchBar.text)
+        presenter.configureSelectedFilter(searchText: searchBar.text ?? "")
         searchBar.endEditing(true)
-        
     }
 }
+
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.returnGitHubJobsData().count
+        return presenter.returnJobsData().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(JobTableViewCell.self)", for: indexPath) as? JobTableViewCell else { return UITableViewCell() }
         
-        cell.jobTitleLabel.text = presenter.returnGitHubJobsData()[indexPath.row].jobTitle
-        cell.companyNameLabel.text = presenter.returnGitHubJobsData()[indexPath.row].companyName
-        cell.companyLocationLabel.text = presenter.returnGitHubJobsData()[indexPath.row].location?.first
-        cell.postDateLabel.text = presenter.returnGitHubJobsData()[indexPath.row].postDate
-        cell.companyImageView.setImage(imageUrl: presenter.returnGitHubJobsData()[indexPath.row].companyLogo ?? "")
+        cell.jobTitleLabel.text = presenter.returnJobsData()[indexPath.row].jobTitle
+        cell.companyNameLabel.text = presenter.returnJobsData()[indexPath.row].companyName
+        cell.companyLocationLabel.text = presenter.returnJobsData()[indexPath.row].location?.first
+        cell.postDateLabel.text = presenter.returnJobsData()[indexPath.row].postDate
+        cell.companyImageView.setImage(imageUrl: presenter.returnJobsData()[indexPath.row].companyLogo ?? "")
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        open(url: presenter.returnGitHubJobsData()[indexPath.row].jobDetailsURL ?? "")
+        open(url: presenter.returnJobsData()[indexPath.row].jobDetailsURL ?? "")
     }
     
 }
 
-
-extension MainViewController: MainViewDelegate {
-    func configureSearchBarPlaceholderText(text: String) {
-        searchBar.placeholder = text
+extension MainViewController: GMSAutocompleteViewControllerDelegate {
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
+        // Do something with the selected place.
+        presenter.setLocation(place.name)
+        dismiss(animated: true, completion: nil)
     }
     
-  
-    func setGitHubServiceSucceeded() {
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+        // Handle the error
+        print("Error: ", error.localizedDescription)
+    }
+    
+    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        // Dismiss when the user canceled the action
+        dismiss(animated: true, completion: nil)
+    }
+
+    
+}
+extension MainViewController: MainViewDelegate {
+    func setSearchBarPlaceholderForAllFilter() {
+        searchBar.placeholder = "Jobs jobs jobs.."
+    }
+    
+    func setSucceeded() {
         jobsTableView.reloadData()
     }
     
-    func startGitHubServiceLoading() {
+    func startLoading() {
         
     }
     
-    func finishGitHubServiceLoading() {
+    func finishLoading() {
         
     }
     
-    func setGitHubServiceFailed(error: Error?) {
+    func setFailed(error: Error?) {
         
     }
     
-    func setGOVSearchServiceSucceeded() {
-        
+    func setSearchBarPlaceholderForPositionFilter() {
+        searchBar.placeholder = "search for a position"
     }
     
-    func startGOVSearchServiceLoading() {
-        
+    func setSearchBarPlaceholderForLocationFilter() {
+        searchBar.placeholder = "location.."
+
     }
     
-    func finishGOVSearchServiceLoading() {
-        
+    func setSearchBarPlaceholderForProviderFilter() {
+        searchBar.placeholder = "GitHub, GOVSearch"
+
     }
-    
-    func setGOVSearchServiceFailed(error: Error?) {
-        
-    }
-    
-    
+  
 }
