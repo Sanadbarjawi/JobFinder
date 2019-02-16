@@ -16,11 +16,15 @@ protocol MainViewDelegate: class {
 }
 
 class MainViewPresenter {
+    private var gitHubJobs = [GitHubJobModel]()
+    private var govSearchJobs = [GitHubJobModel]()
     
     weak var view: MainViewDelegate?
-    weak var service: JobService?
+    var service: JobService?
    
     init(_ service: JobService) {
+
+
         self.service = service
     }
     
@@ -38,6 +42,7 @@ class MainViewPresenter {
                       "location": location]
         view?.startLoading()
         service?.getGitHubJobs(params: params, success: {[weak self] model in
+            self?.gitHubJobs = model
             self?.view?.setSucceeded()
             self?.view?.finishLoading()
             }, failure: {[weak self] error in
@@ -45,6 +50,10 @@ class MainViewPresenter {
                 self?.view?.finishLoading()
             }
         )}
+    
+    func getGitHubJobsData() -> [GitHubJobModel] {
+        return gitHubJobs
+    }
     
     func getGOVSearchJobs() {
         

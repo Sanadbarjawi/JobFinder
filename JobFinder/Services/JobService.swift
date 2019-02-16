@@ -10,7 +10,7 @@ import Foundation
 class JobService {
     private var apiHelper = APIHelper()
     
-    func getGitHubJobs(params: [String: Any], success: @escaping (GitHubJobModel) -> Void, failure: @escaping (Error?) -> Void) {
+    func getGitHubJobs(params: [String: Any], success: @escaping ([GitHubJobModel]) -> Void, failure: @escaping (Error?) -> Void) {
         apiHelper.getRequest(endPoint: URLPath.gitHubJobs, parameters: params, headers: nil) { (data, error) in
 
             if error != nil {
@@ -25,7 +25,7 @@ class JobService {
             }
             
             do {
-                let gitHubModel = try JSONDecoder().decode(GitHubJobModel.self, from: data)
+                let gitHubModel = try JSONDecoder().decode([GitHubJobModel].self, from: data)
                 success(gitHubModel)
             } catch {
                 failure(error)

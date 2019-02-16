@@ -12,6 +12,6 @@ target 'JobFinder' do
     # Pods for testing
   end
 pod 'Alamofire'
-
-
+pod 'Kingfisher'
+pod 'GooglePlaces'
 end
