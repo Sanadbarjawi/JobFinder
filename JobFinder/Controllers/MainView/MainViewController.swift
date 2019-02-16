@@ -32,31 +32,24 @@ extension MainViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter.searchActive = true
-        self.presenter.filterGitHubJobsData(searchText: searchText, key: presenter.getSelectedScope())
-        jobsTableView.reloadData()
+        
+                presenter.searchActive = true
+                self.presenter.filterGitHubJobsData(searchText: searchText, key: presenter.getSelectedScope())
+                jobsTableView.reloadData()
+
     }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        presenter.searchActive = true
-//        jobsTableView.reloadData()
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        presenter.searchActive = false
-        jobsTableView.reloadData()
-    }
+
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         presenter.searchActive = false
         searchBar.endEditing(true)
         jobsTableView.reloadData()
+
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        presenter.searchActive = false
-        searchBar.endEditing(true)
-        jobsTableView.reloadData()
+                presenter.searchActive = false
+                searchBar.endEditing(true)
     }
 }
 
