@@ -48,6 +48,7 @@ class MainViewController: UIViewController {
             self?.searchBar.text = ""
             self?.presenter.getGitHubJobsAPI()
             self?.presenter.getGOVSearchJobsAPI()
+            self?.view.endEditing(true)
         }
         
         dropDown.anchorView = filterButton
@@ -78,23 +79,18 @@ extension MainViewController: UISearchBarDelegate {
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.returnJobsData().count
+        return presenter.returnJobsCount()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(JobTableViewCell.self)", for: indexPath) as? JobTableViewCell else { return UITableViewCell() }
-        
-        cell.jobTitleLabel.text = presenter.returnJobsData()[indexPath.row].jobTitle
-        cell.companyNameLabel.text = presenter.returnJobsData()[indexPath.row].companyName
-        cell.companyLocationLabel.text = presenter.returnJobsData()[indexPath.row].location?.first
-        cell.postDateLabel.text = presenter.returnJobsData()[indexPath.row].postDate
-        cell.companyImageView.setImage(imageUrl: presenter.returnJobsData()[indexPath.row].companyLogo ?? "")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(JobTableViewCell.self)", for: indexPath) as? JobTableViewCell & Cellable else { return UITableViewCell() }
+            cell.configure(presenter.returnJobsData(indexPath: indexPath))
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        open(url: presenter.returnJobsData()[indexPath.row].jobDetailsURL ?? "")
+        open(url: presenter.returnJobsData(indexPath: indexPath).jobDetailsURL ?? "")
     }
     
 }
@@ -102,7 +98,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: GMSAutocompleteViewControllerDelegate {
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         // Do something with the selected place.
-        presenter.setLocation(place.name)
+        presenter.setLocation(place.name ?? "")
         dismiss(animated: true, completion: nil)
     }
     
@@ -128,15 +124,15 @@ extension MainViewController: MainViewDelegate {
     }
     
     func startLoading() {
-        
+        self.view.showLoader()
     }
     
     func finishLoading() {
-        
+       self.view.dismissLoader()
     }
     
     func setFailed(error: Error?) {
-        
+        //handle failed and errors
     }
     
     func setSearchBarPlaceholderForPositionFilter() {
