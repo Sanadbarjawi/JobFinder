@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum FilterEnum: Int {
+enum FilterEnum: String {
     case position
     case location
     case provider
@@ -28,15 +28,10 @@ protocol MainViewDelegate: class {
 }
 
 class MainViewPresenter {
-    private var gitHubJobs = [JobsModel]()
-//    private var govSearchJobs = [GOVSearchModel]()
-
-//    var searchActive: Bool = false
-//
-//    private var gitHubFilteredJobs = [GitHubJobModel]()
-//    private var govSearchFilteredJobs = [GOVSearchModel]()
-
     
+    private var gitHubJobs = [JobsModel]()
+    private var dropDownData = [FilterEnum.location, FilterEnum.provider, FilterEnum.position]
+    private var selectedFilter = FilterEnum.position
     weak var view: MainViewDelegate?
     var service: JobService?
    
@@ -54,11 +49,14 @@ class MainViewPresenter {
         self.view = nil
     }
     
-    func getGitHubJobsAPI() {
+    func getGitHubJobsAPI(location: String? = nil, description: String? = nil) {
         
         let params = ["":""]
+        let queryLocationItem = URLQueryItem(name: "location", value: location)
+        let queryPositionItem = URLQueryItem(name: "description", value: description)
+
         view?.startGitHubServiceLoading()
-        service?.getGitHubJobs(params: params, success: {[weak self] model in
+        service?.getGitHubJobs(params: params, queryItems: [queryLocationItem, queryPositionItem], success: {[weak self] model in
             model.forEach{self?.gitHubJobs.append($0)}
             self?.view?.setGitHubServiceSucceeded()
             self?.view?.finishGitHubServiceLoading()
@@ -68,11 +66,12 @@ class MainViewPresenter {
             }
         )}
     
-    func getGOVSearchJobsAPI() {
+    func getGOVSearchJobsAPI(searchQuery: String? = nil) {
         
         let params = ["":""]
+        let queryItem = URLQueryItem(name: "query", value: searchQuery)
         view?.startGOVSearchServiceLoading()
-        service?.getGOVSearchJobs(params: params, success: { [weak self] model in
+        service?.getGOVSearchJobs(params: params, queryItems: [queryItem], success: { [weak self] model in
             model.forEach{self?.gitHubJobs.append($0)}
             self?.view?.setGitHubServiceSucceeded()
             self?.view?.finishGOVSearchServiceLoading()
@@ -82,52 +81,25 @@ class MainViewPresenter {
             }
         )}
     
+    func resetSearch() {
+        gitHubJobs.removeAll()
+    }
+    
+    func returnDropDownFilterDataSource() -> [FilterEnum.RawValue] {
+        return dropDownData.map{$0.rawValue}
+    }
+
+    func selectFilter(index: Int) {
+       selectedFilter = dropDownData[index]
+    }
+    
+    func returnSelectedFilter() -> FilterEnum  {
+        return selectedFilter
+    }
+    
     func returnGitHubJobsData() -> [JobsModel] {
-//        if searchActive {
-//            return gitHubFilteredJobs
-//        }
+
         return gitHubJobs
     }
     
-//    func returnGOVSearchJobsData() -> [GOVSearchModel] {
-//        if searchActive {
-//            return govSearchFilteredJobs
-//        }
-//        return govSearchJobs
-//    }
-//
-//    func filterGitHubJobsData(searchText: String) {
-//        gitHubFilteredJobs = gitHubJobs.filter({ (text) -> Bool in
-//
-//                 let tmp: NSString = text.jobTitle as NSString? ?? ""
-//
-//
-//            let range = tmp.range(of: searchText, options: .caseInsensitive)
-//            return range.location != NSNotFound
-//        })
-//
-//        if gitHubFilteredJobs.count == 0 {
-//            searchActive = false
-//        } else {
-//            searchActive = true
-//        }
-//    }
-    
-//    func filterGOVSearchJobsData(searchText: String) {
-//        govSearchFilteredJobs = govSearchJobs.filter({ (text) -> Bool in
-//
-//                let tmp: NSString = text.positionTitle as NSString? ?? ""
-//
-//            let range = tmp.range(of: searchText, options: .caseInsensitive)
-//            return range.location != NSNotFound
-//        })
-//
-//        if govSearchFilteredJobs.count == 0 {
-//            searchActive = false
-//        } else {
-//            searchActive = true
-//        }
-//    }
-
-
 }

@@ -11,8 +11,8 @@ class JobService {
     
     private var apiHelper = APIHelper()
     
-    func getGitHubJobs(params: [String: Any], success: @escaping ([JobsModel]) -> Void, failure: @escaping (Error?) -> Void) {
-        apiHelper.getRequest(endPoint: URLPath.gitHubJobs, parameters: params, headers: nil) { (data, error) in
+    func getGitHubJobs(params: [String: Any], queryItems: [URLQueryItem], success: @escaping ([JobsModel]) -> Void, failure: @escaping (Error?) -> Void) {
+        apiHelper.getRequest(endPoint: URLPath.gitHubJobs, parameters: params, headers: nil, queryItems: queryItems) { (data, error) in
 
             if error != nil {
                 failure(error)
@@ -36,8 +36,8 @@ class JobService {
     }
     
     
-    func getGOVSearchJobs(params: [String: Any], success: @escaping ([JobsModel]) -> Void, failure: @escaping (Error?) -> Void) {
-        apiHelper.getRequest(endPoint: URLPath.searchGOVJobs, parameters: params, headers: nil) { (data, error) in
+    func getGOVSearchJobs(params: [String: Any], queryItems: [URLQueryItem], success: @escaping ([JobsModel]) -> Void, failure: @escaping (Error?) -> Void) {
+        apiHelper.getRequest(endPoint: URLPath.searchGOVJobs, parameters: params, headers: nil, queryItems: queryItems) { (data, error) in
             
             if error != nil {
                 failure(error)

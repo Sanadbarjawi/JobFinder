@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import DropDown
 
 class MainViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
@@ -14,8 +15,10 @@ class MainViewController: UIViewController {
     @IBOutlet weak var jobsTableView: UITableView!
     
     var presenter: MainViewPresenter!
+    var dropDown: DropDown!
     override func viewDidLoad() {
         super.viewDidLoad()
+     
         presenter = MainViewPresenter(JobService())
         presenter.attatchView(self)
         presenter.getGitHubJobsAPI()
@@ -23,31 +26,48 @@ class MainViewController: UIViewController {
         jobsTableView.tableFooterView = UIView()
         jobsTableView.tableHeaderView = searchBar
         
+        dropDown = DropDown()
+        dropDown.direction = .bottom
+        dropDown.dataSource = presenter.returnDropDownFilterDataSource()
+   
+        dropDown.selectionAction = {[weak self] (index, item) in
+            self?.presenter.selectFilter(index: index)
+        }
+        dropDown.anchorView = filterButton
+        dropDown.bottomOffset = CGPoint(x: 0, y: filterButton.accessibilityFrame.height)
+        
+    }
+    
+    @IBAction func filterTapped(_ sender: UIBarButtonItem) {
+        dropDown.show()
     }
     
 }
 
 extension MainViewController: UISearchBarDelegate {
- 
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-//                presenter.searchActive = true
-//                self.presenter.filterGitHubJobsData(searchText: searchText)
-//                jobsTableView.reloadData()
-
-    }
-
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        presenter.searchActive = false
-//        searchBar.endEditing(true)
-//        jobsTableView.reloadData()
-
+        
+        searchBar.endEditing(true)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//                presenter.searchActive = false
-//                searchBar.endEditing(true)
+        presenter.resetSearch()
+      let selectedFilter = presenter.returnSelectedFilter()
+        
+        switch selectedFilter {
+       
+        case .position:
+            presenter.getGitHubJobsAPI(location: nil, description: searchBar.text)
+        case .location:
+            presenter.getGitHubJobsAPI(location: searchBar.text, description: searchBar.text)
+        case .provider:
+            break
+        }
+        
+        presenter.getGOVSearchJobsAPI(searchQuery: searchBar.text)
+        searchBar.endEditing(true)
+        
     }
 }
 
