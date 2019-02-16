@@ -14,84 +14,103 @@ class MainViewController: UIViewController {
     @IBOutlet weak var jobsTableView: UITableView!
     
     var presenter: MainViewPresenter!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = MainViewPresenter(JobService())
         presenter.attatchView(self)
-        presenter.getGitHubJobs()
+        presenter.getGitHubJobsAPI()
+        presenter.getGOVSearchJobsAPI()
         jobsTableView.tableFooterView = UIView()
-//        jobsTableView.tableHeaderView = searchBar
+        jobsTableView.tableHeaderView = searchBar
+        
     }
     
 }
 
 extension MainViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        presenter.configureSearchBarScope(scopeIndex: selectedScope)
-    }
-    
+ 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-                presenter.searchActive = true
-                self.presenter.filterGitHubJobsData(searchText: searchText, key: presenter.getSelectedScope())
-                jobsTableView.reloadData()
+//                presenter.searchActive = true
+//                self.presenter.filterGitHubJobsData(searchText: searchText)
+//                jobsTableView.reloadData()
 
     }
 
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        presenter.searchActive = false
-        searchBar.endEditing(true)
-        jobsTableView.reloadData()
+//        presenter.searchActive = false
+//        searchBar.endEditing(true)
+//        jobsTableView.reloadData()
 
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-                presenter.searchActive = false
-                searchBar.endEditing(true)
+//                presenter.searchActive = false
+//                searchBar.endEditing(true)
     }
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter.getGitHubJobsData().count
+        return presenter.returnGitHubJobsData().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(JobTableViewCell.self)", for: indexPath) as? JobTableViewCell else { return UITableViewCell() }
         
-        cell.jobTitleLabel.text = presenter.getGitHubJobsData()[indexPath.row].jobTitle
-        cell.companyNameLabel.text = presenter.getGitHubJobsData()[indexPath.row].companyName
-        cell.companyLocationLabel.text = presenter.getGitHubJobsData()[indexPath.row].location
-        cell.postDateLabel.text = presenter.getGitHubJobsData()[indexPath.row].postDate?.string(format: "dd/MM/yyyy")
-        cell.companyImageView.setImage(imageUrl: presenter.getGitHubJobsData()[indexPath.row].companyLogo ?? "")
+        cell.jobTitleLabel.text = presenter.returnGitHubJobsData()[indexPath.row].jobTitle
+        cell.companyNameLabel.text = presenter.returnGitHubJobsData()[indexPath.row].companyName
+        cell.companyLocationLabel.text = presenter.returnGitHubJobsData()[indexPath.row].location?.first
+        cell.postDateLabel.text = presenter.returnGitHubJobsData()[indexPath.row].postDate
+        cell.companyImageView.setImage(imageUrl: presenter.returnGitHubJobsData()[indexPath.row].companyLogo ?? "")
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        open(url: presenter.getGitHubJobsData()[indexPath.row].jobDetailsURL ?? "")
+        open(url: presenter.returnGitHubJobsData()[indexPath.row].jobDetailsURL ?? "")
     }
-    
     
 }
 
 
 extension MainViewController: MainViewDelegate {
-    func setFailed(error: Error?) {
-        
+    func configureSearchBarPlaceholderText(text: String) {
+        searchBar.placeholder = text
     }
     
-    func setSucceeded() {
+  
+    func setGitHubServiceSucceeded() {
         jobsTableView.reloadData()
     }
     
-    func startLoading() {
+    func startGitHubServiceLoading() {
         
     }
     
-    func finishLoading() {
+    func finishGitHubServiceLoading() {
+        
+    }
+    
+    func setGitHubServiceFailed(error: Error?) {
+        
+    }
+    
+    func setGOVSearchServiceSucceeded() {
+        
+    }
+    
+    func startGOVSearchServiceLoading() {
+        
+    }
+    
+    func finishGOVSearchServiceLoading() {
+        
+    }
+    
+    func setGOVSearchServiceFailed(error: Error?) {
         
     }
     

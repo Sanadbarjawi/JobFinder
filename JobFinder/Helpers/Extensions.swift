@@ -11,18 +11,15 @@ import UIKit
 import Kingfisher
 
 extension String {
-    func string(format: String) -> String {
+    func string(toFormat: String, fromFormat: String) -> String {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "E MMM d HH:mm:ss Z yy"
+        dateFormatterGet.dateFormat = fromFormat
         let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = format
+        dateFormatterPrint.dateFormat = toFormat
         var strDate = ""
         if let date = dateFormatterGet.date(from: self) {
-            print(dateFormatterPrint.string(from: date))
             strDate = dateFormatterPrint.string(from: date)
-        } else {
-            print("There was an error decoding the string")
-        }
+        } 
         return strDate
         
     }
