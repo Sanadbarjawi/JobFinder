@@ -136,9 +136,12 @@ class MainViewPresenter {
         }
     }
     
-    func returnJobsData() -> [JobsModel] {
+    func returnJobsData(indexPath: IndexPath) -> JobsModel {
         
-        return jobsArray
+        return jobsArray[indexPath.row]
     }
-    
+    func returnJobsCount() -> Int {
+        
+        return jobsArray.count
+    }
 }

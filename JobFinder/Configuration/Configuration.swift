@@ -9,7 +9,11 @@
 import Foundation
 
 // MARK: - Configurations
-private struct Configuration {
+ struct Configuration {
+    
+    static var googlePlacesAPIKey: String {
+        return "AIzaSyAXa3tGtUNvh2HlL7ZaA2E_32Zi8UG7n2Y"
+    }
     static var searchGOVServerURL: String {
         return "https://jobs.search.gov/"
     }

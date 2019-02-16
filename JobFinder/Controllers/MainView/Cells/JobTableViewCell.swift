@@ -8,7 +8,17 @@
 
 import UIKit
 
-class JobTableViewCell: UITableViewCell {
+class JobTableViewCell: UITableViewCell, Cellable {
+    func configure(_ object: Codable) {
+        if let jobsModel = object as? JobsModel {
+            jobTitleLabel.text = jobsModel.jobTitle
+            companyNameLabel.text = jobsModel.companyName
+            companyLocationLabel.text = jobsModel.location?.first
+            postDateLabel.text = jobsModel.postDate
+            companyImageView.setImage(imageUrl: jobsModel.companyLogo ?? "")
+        }
+    }
+    
     
     @IBOutlet weak var companyImageView: UIImageView!
     @IBOutlet weak var jobTitleLabel: UILabel!
@@ -20,5 +30,5 @@ class JobTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
 }
