@@ -14,4 +14,5 @@ target 'JobFinder' do
 pod 'Alamofire'
 pod 'Kingfisher'
 pod 'GooglePlaces'
+pod 'DropDown'
 end
