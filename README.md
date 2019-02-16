@@ -20,6 +20,9 @@ These instructions will get you a copy of the project up and running on your loc
 ## Frameworks used
 
 * [Alamofire](https://github.com/Alamofire/Alamofire) - The networking framework used
+* [Kingfisher](https://github.com/onevcat/Kingfisher) - image manager framework used
+* [GooglePlaces](https://developers.google.com/places/web-service/intro) - auto-complete places framework used
+* [DropDown](https://github.com/AssistoLab/DropDown) - The filtering UI used
 
 
 ## Pattern used
