@@ -7,10 +7,6 @@ target 'JobFinder' do
 
   # Pods for JobFinder
 
-  target 'JobFinderTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 pod 'Alamofire'
 pod 'Kingfisher'
 pod 'GooglePlaces'

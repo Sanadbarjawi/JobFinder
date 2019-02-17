@@ -11,14 +11,11 @@ import Foundation
 // MARK: - Configurations
  struct Configuration {
     
-    static var googlePlacesAPIKey: String {
-        return "AIzaSyAXa3tGtUNvh2HlL7ZaA2E_32Zi8UG7n2Y"
-    }
     static var searchGOVServerURL: String {
-        return "https://jobs.search.gov/"
+        return Enviroment.configuration(.searchGovServerURL)
     }
     static var gitHubServerURL: String {
-        return  "https://jobs.github.com/"
+        return  Enviroment.configuration(.githubServerURL)
     }
 }
 

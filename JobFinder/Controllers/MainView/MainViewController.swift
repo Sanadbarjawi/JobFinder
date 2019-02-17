@@ -84,13 +84,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(JobTableViewCell.self)", for: indexPath) as? JobTableViewCell & Cellable else { return UITableViewCell() }
-            cell.configure(presenter.returnJobsData(indexPath: indexPath))
+            cell.configure(presenter.returnJobsData(indexPath))
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        open(url: presenter.returnJobsData(indexPath: indexPath).jobDetailsURL ?? "")
+        open(url: presenter.returnJobsData(indexPath).jobDetailsURL ?? "")
     }
     
 }
