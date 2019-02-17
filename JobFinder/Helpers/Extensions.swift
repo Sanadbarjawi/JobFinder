@@ -32,7 +32,7 @@ extension UIView {
      - parameter Color:  ActivityIndicator and view loading color .
      
      */
-    func showLoader(_ color: UIColor? = UIColor.black.withAlphaComponent(0.5)) {
+    func showLoader(_ color: UIColor? = UIColor.black.withAlphaComponent(0.2)) {
         let loaderView  = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
         loaderView.tag = -3 + self.tag
         loaderView.backgroundColor = color
