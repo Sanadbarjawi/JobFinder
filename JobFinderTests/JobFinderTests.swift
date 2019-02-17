@@ -11,24 +11,62 @@ import XCTest
 
 class JobFinderTests: XCTestCase {
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func testGitHubServiceWithNilParameters() {
+        let presenter = MainViewPresenter(JobService())
+        presenter.attachView(self)
+        presenter.getGitHubJobsAPI(location: nil, description: nil)
     }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testGOVSearchServiceWithNilParameters() {
+        let presenter = MainViewPresenter(JobService())
+        presenter.attachView(self)
+        presenter.getGOVSearchJobsAPI(Desc: nil, location: nil)
     }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testGOVSearchServiceWithMockParameters() {
+        let presenter = MainViewPresenter(JobService())
+        presenter.attachView(self)
+        presenter.getGOVSearchJobsAPI(Desc: "Nurse", location: "new york")
     }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testGitHubServiceWithMockParameters() {
+        let presenter = MainViewPresenter(JobService())
+        presenter.attachView(self)
+        presenter.getGitHubJobsAPI(location: "Android developer", description: "")
     }
+}
 
+extension JobFinderTests: MainViewDelegate {
+    func setSearchBarPlaceholderForPositionFilter() {
+        
+    }
+    
+    func setSearchBarPlaceholderForLocationFilter() {
+        
+    }
+    
+    func setSearchBarPlaceholderForProviderFilter() {
+        
+    }
+    
+    func setSearchBarPlaceholderForAllFilter() {
+        
+    }
+    
+    func setSucceeded() {
+          XCTAssert(true)
+    }
+    
+    func startLoading() {
+        
+    }
+    
+    func finishLoading() {
+        
+    }
+    
+    func setFailed(error: Error?) {
+        XCTAssert(false)
+    }
+    
 }

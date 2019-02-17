@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zAk-a8-0LT">
-                                <rect key="frame" x="0.0" y="140" width="375" height="638"/>
+                                <rect key="frame" x="0.0" y="170.33333333333331" width="375" height="607.66666666666674"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="JobTableViewCell" rowHeight="141" id="JAh-IV-Bl3" customClass="JobTableViewCell" customModule="JobFinder" customModuleProvider="target">
@@ -123,18 +123,27 @@
                                     <outlet property="delegate" destination="WYn-cf-Php" id="Aak-Ux-MYw"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EBf-OT-chh">
+                                <rect key="frame" x="15" y="145" width="345" height="20.333333333333343"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="zAk-a8-0LT" firstAttribute="top" secondItem="EBf-OT-chh" secondAttribute="bottom" constant="5" id="241-gp-y9b"/>
+                            <constraint firstItem="EBf-OT-chh" firstAttribute="leading" secondItem="6qW-7N-roS" secondAttribute="leading" constant="15" id="IRY-F6-JyQ"/>
                             <constraint firstItem="zAk-a8-0LT" firstAttribute="leading" secondItem="wOb-9A-zmw" secondAttribute="leading" id="PSW-rP-YXb"/>
-                            <constraint firstItem="zAk-a8-0LT" firstAttribute="top" secondItem="wOb-9A-zmw" secondAttribute="top" id="Snq-Qm-svX"/>
+                            <constraint firstItem="wOb-9A-zmw" firstAttribute="trailing" secondItem="EBf-OT-chh" secondAttribute="trailing" constant="15" id="TgN-0f-kUs"/>
+                            <constraint firstItem="EBf-OT-chh" firstAttribute="top" secondItem="wOb-9A-zmw" secondAttribute="top" constant="5" id="Y5P-xa-qie"/>
                             <constraint firstItem="wOb-9A-zmw" firstAttribute="bottom" secondItem="zAk-a8-0LT" secondAttribute="bottom" id="pRx-nz-AEb"/>
                             <constraint firstItem="wOb-9A-zmw" firstAttribute="trailing" secondItem="zAk-a8-0LT" secondAttribute="trailing" id="vTt-In-TQM"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wOb-9A-zmw"/>
                     </view>
                     <navigationItem key="navigationItem" title="Job Finder" id="dgL-A2-jrS">
-                        <barButtonItem key="rightBarButtonItem" title="Filter" id="kcv-1w-KrX">
+                        <barButtonItem key="rightBarButtonItem" image="baseline_filter" id="kcv-1w-KrX">
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="filterTapped:" destination="WYn-cf-Php" id="9Fs-Zm-CK2"/>
@@ -143,6 +152,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="filterButton" destination="kcv-1w-KrX" id="GNl-jV-RXh"/>
+                        <outlet property="filterTitleLabel" destination="EBf-OT-chh" id="icw-q6-0ZW"/>
                         <outlet property="jobsTableView" destination="zAk-a8-0LT" id="ASA-Og-qqh"/>
                         <outlet property="searchBar" destination="4ax-f4-CQc" id="mTo-Ec-zuU"/>
                     </connections>
@@ -180,5 +190,6 @@
     </scenes>
     <resources>
         <image name="astronaut_ic" width="462" height="511"/>
+        <image name="baseline_filter" width="72" height="72"/>
     </resources>
 </document>
