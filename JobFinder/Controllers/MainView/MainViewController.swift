@@ -132,11 +132,11 @@ extension MainViewController: MainViewDelegate {
     }
     
     func startLoading() {
-        self.view.showLoader()
+       // self.view.showLoader()
     }
     
     func finishLoading() {
-       self.view.dismissLoader()
+       //self.view.dismissLoader()
     }
     
     func setFailed(error: Error?) {
