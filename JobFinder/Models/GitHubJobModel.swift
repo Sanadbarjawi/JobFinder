@@ -24,7 +24,7 @@ class JobsModel: Codable {
         let container1 = try decoder.container(keyedBy: GitHubCodingKeys.self)
         let container2 = try decoder.container(keyedBy: GovSearchCodingKeys.self)
 
-        do {
+        do { //for the gitHub provider
             
             companyLogo = try? container1.decode(String.self, forKey: .companyLogo)
             location?.append(try container1.decode(String.self, forKey: .location))
@@ -32,13 +32,16 @@ class JobsModel: Codable {
             companyName = try container1.decode(String.self, forKey: .companyName)
             postDate = try container1.decode(String.self, forKey: .postDate).string(toFormat: "dd/MM/yyyy", fromFormat: "E MMM d HH:mm:ss Z yy")
             jobDetailsURL = try container1.decode(String.self, forKey: .jobDetailsURL)
-        } catch {
+        } catch { //for the GOVSearch provider
             companyName = try container2.decode(String.self, forKey: .organizationName)
             jobTitle = try container2.decode(String.self, forKey: .positionTitle)
             location = try container2.decode([String].self, forKey: .locations)
             postDate = try container2.decode(String.self, forKey: .startDate).string(toFormat: "dd/MM/yyyy", fromFormat: "yyyy-MM-dd")
             jobDetailsURL = try container2.decode(String.self, forKey: .url)
+        } catch {
+            // for any other providers follow the same pattern
         }
+        
     }
     
     private enum GitHubCodingKeys: String, CodingKey {
