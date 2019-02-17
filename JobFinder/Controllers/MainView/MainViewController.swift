@@ -35,6 +35,11 @@ class MainViewController: UIViewController {
         
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        presenter.detachView()
+    }
+    
     @IBAction func filterTapped(_ sender: UIBarButtonItem) {
         dropDown.show()
     }
