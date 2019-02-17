@@ -25,7 +25,6 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
      
         presenter = MainViewPresenter(JobService())
-        presenter.attachView(self)
         presenter.getGitHubJobsAPI()
         presenter.getGOVSearchJobsAPI()
         jobsTableView.tableFooterView = UIView()
@@ -33,6 +32,10 @@ class MainViewController: UIViewController {
         
         dropDownConfig()
         
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.attachView(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
