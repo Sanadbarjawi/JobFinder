@@ -1,0 +1,18 @@
+//
+//  DevelopmentConfig.xcconfig
+//  JobFinder
+//
+//  Created by Sanad  on 2/17/19.
+//  Copyright © 2019 SanadBarj. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+#include "Pods/Target Support Files/Pods-JobFinder/Pods-JobFinder.debug.xcconfig"
+
+SLASH = /
+//GOOGLE PLACES API KEY
+GOOGLE_PLACES_API_KEY = AIzaSyAXa3tGtUNvh2HlL7ZaA2E_32Zi8UG7n2Y
+
+SEARCH_GOV_SERVER_URL = https:$(SLASH)/jobs.search.gov/
+GIT_HUB_SERVER_URL = https:$(SLASH)/jobs.github.com/

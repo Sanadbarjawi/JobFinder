@@ -136,7 +136,7 @@ class MainViewPresenter {
         }
     }
     
-    func returnJobsData(indexPath: IndexPath) -> JobsModel {
+    func returnJobsData(_ indexPath: IndexPath) -> JobsModel {
         
         return jobsArray[indexPath.row]
     }
