@@ -14,6 +14,7 @@ class MainViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var filterButton: UIBarButtonItem!
     @IBOutlet weak var jobsTableView: UITableView!
+    @IBOutlet weak var filterTitleLabel: UILabel!
     
     var presenter: MainViewPresenter!
     var dropDown: DropDown!
@@ -66,6 +67,7 @@ extension MainViewController: UISearchBarDelegate {
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         jobsTableView.reloadData()
+        
         searchBar.endEditing(true)
     }
 
@@ -117,6 +119,7 @@ extension MainViewController: GMSAutocompleteViewControllerDelegate {
 extension MainViewController: MainViewDelegate {
     func setSearchBarPlaceholderForAllFilter() {
         searchBar.placeholder = "Jobs jobs jobs.."
+        filterTitleLabel.text = "All"
     }
     
     func setSucceeded() {
@@ -137,15 +140,18 @@ extension MainViewController: MainViewDelegate {
     
     func setSearchBarPlaceholderForPositionFilter() {
         searchBar.placeholder = "search for a position"
+        filterTitleLabel.text = "Position"
+
     }
     
     func setSearchBarPlaceholderForLocationFilter() {
         searchBar.placeholder = "location.."
-
+        filterTitleLabel.text = "location"
     }
     
     func setSearchBarPlaceholderForProviderFilter() {
         searchBar.placeholder = "GitHub, GOVSearch"
+        filterTitleLabel.text = "provider"
 
     }
   
