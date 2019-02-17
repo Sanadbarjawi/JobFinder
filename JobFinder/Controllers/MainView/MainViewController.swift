@@ -24,7 +24,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
      
         presenter = MainViewPresenter(JobService())
-        presenter.attatchView(self)
+        presenter.attachView(self)
         presenter.getGitHubJobsAPI()
         presenter.getGOVSearchJobsAPI()
         jobsTableView.tableFooterView = UIView()
@@ -112,8 +112,8 @@ extension MainViewController: GMSAutocompleteViewControllerDelegate {
         dismiss(animated: true, completion: nil)
     }
 
-    
 }
+
 extension MainViewController: MainViewDelegate {
     func setSearchBarPlaceholderForAllFilter() {
         searchBar.placeholder = "Jobs jobs jobs.."
